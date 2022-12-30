@@ -12,8 +12,8 @@ const Home = () => {
 
     const handelSubmit = (event) => {
         event.preventDefault();
-        
-        if(!user?.uid){
+
+        if (!user?.uid) {
             toast.error('You must login first')
             return navigate('/login')
         }
@@ -36,32 +36,32 @@ const Home = () => {
                 const photoURL = imageData.data.display_url;
 
                 const mediaInfo = {
-                    userName : user?.displayName,
-                    userEmail : user?.email,
-                    userPhoto : user?.photoURL,
+                    userName: user?.displayName,
+                    userEmail: user?.email,
+                    userPhoto: user?.photoURL,
                     feeling,
                     photoURL
 
                 }
                 if (imageData.success) {
-                    fetch(`http://localhost:5000/media`, {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify(mediaInfo)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data)
-                        if (data.acknowledged) {
-                            toast.success("Successfully Share Done!")
-                            navigate('/media')
-                        }
-                        else {
-                            toast.error(data.message)
-                        }
+                    fetch(`https://we-share-server-liard.vercel.app/media`, {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify(mediaInfo)
                     })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data)
+                            if (data.acknowledged) {
+                                toast.success("Successfully Share Done!")
+                                navigate('/media')
+                            }
+                            else {
+                                toast.error(data.message)
+                            }
+                        })
 
                 }
             })

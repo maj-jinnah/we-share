@@ -9,7 +9,7 @@ import Login from "../../Pages/Shared/Login";
 import Signup from "../../Pages/Shared/Signup";
 import PrivetRoute from "../PrivetRoute/PrivetRoute";
 
-export const router= createBrowserRouter([
+export const router = createBrowserRouter([
     {
         path: '/',
         element: <Main></Main>,
@@ -28,7 +28,7 @@ export const router= createBrowserRouter([
             },
             {
                 path: '/media',
-                loader: ()=> fetch(`http://localhost:5000/medias`) ,
+                loader: () => fetch(`https://we-share-server-liard.vercel.app/medias`),
                 element: <PrivetRoute><Media></Media></PrivetRoute>
             },
             {
