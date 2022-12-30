@@ -34,8 +34,34 @@ const Home = () => {
             .then(res => res.json())
             .then(imageData => {
                 const photoURL = imageData.data.display_url;
+
+                const mediaInfo = {
+                    userName : user?.displayName,
+                    userEmail : user?.email,
+                    userPhoto : user?.photoURL,
+                    feeling,
+                    photoURL
+
+                }
                 if (imageData.success) {
-                    toast.success('Success')
+                    fetch(`http://localhost:5000/media`, {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify(mediaInfo)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        if (data.acknowledged) {
+                            toast.success("Successfully Share Done!")
+                            navigate('/media')
+                        }
+                        else {
+                            toast.error(data.message)
+                        }
+                    })
 
                 }
             })

@@ -6,14 +6,20 @@ import reportWebVitals from "./reportWebVitals";
 import AuthProvider from "./Contexts/AuthContext/AuthProvider";
 import { Toaster } from "react-hot-toast";
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
-        <AuthProvider>
-            <App />
-        </AuthProvider>
-        <Toaster></Toaster>
-    </React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+            <Toaster></Toaster>
+        </QueryClientProvider>
+    </React.StrictMode >
 );
 
 // If you want to start measuring performance in your app, pass a function

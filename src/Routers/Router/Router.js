@@ -7,6 +7,7 @@ import Message from "../../Pages/Message/Message";
 import ErrorPage from "../../Pages/Shared/ErrorPage";
 import Login from "../../Pages/Shared/Login";
 import Signup from "../../Pages/Shared/Signup";
+import PrivetRoute from "../PrivetRoute/PrivetRoute";
 
 export const router= createBrowserRouter([
     {
@@ -27,15 +28,16 @@ export const router= createBrowserRouter([
             },
             {
                 path: '/media',
-                element: <Media></Media>
+                loader: ()=> fetch(`http://localhost:5000/medias`) ,
+                element: <PrivetRoute><Media></Media></PrivetRoute>
             },
             {
                 path: '/message',
-                element: <Message></Message>
+                element: <PrivetRoute><Message></Message></PrivetRoute>
             },
             {
                 path: '/about',
-                element: <About></About>
+                element: <PrivetRoute><About></About></PrivetRoute>
             }
         ]
     },
