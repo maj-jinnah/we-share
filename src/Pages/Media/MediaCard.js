@@ -3,13 +3,16 @@ import { FaComment } from "react-icons/fa";
 import { BiLike } from "react-icons/bi";
 import './MediaCard.css'
 import { AuthContext } from '../../Contexts/AuthContext/AuthProvider';
+import { toast } from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
+import CommentCard from './CommentCard';
 
 const MediaCard = ({ media }) => {
 
     const { user } = useContext(AuthContext)
     const [isLike, setIsLike] = useState(false)
     const [isCommentOpen, setIsCommentOpen] = useState(false)
-    const { userName, userEmail, userPhoto, feeling, photoURL } = media
+    const { _id, userName, userEmail, userPhoto, feeling, photoURL } = media
 
     const handelLike = () => {
 
@@ -17,16 +20,53 @@ const MediaCard = ({ media }) => {
 
     const handelOpenComment = () => {
         setIsCommentOpen(!isCommentOpen);
+
+        console.log(_id);
     }
+
+    const { data: allComments = [], refetch } = useQuery({
+        queryKey: ['allComments', _id],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/allComments?_id=${_id}`)
+            const data = await res.json()
+            return data;
+        }
+    })
 
     const handelSubmit = event => {
         event.preventDefault();
         const form = event.target;
         const comment = form.comment.value;
-        form.reset()
+        // form.reset()
 
-        console.log(comment)
+        const sendComment = {
+            post_id: _id,
+            post_comment : comment,
+            post_userName: user.displayName,
+            post_userEmail : user.email,
+            post_userPhoto : user.photoURL 
+        }
+        // console.log(sendComment)
+        fetch('http://localhost:5000/comment', {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(sendComment)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.acknowledged) {
+                        toast.success("Your comment is successfully posted!")
+                        form.reset();
+                        refetch()
+                    }
+                })
+                .catch(error => console.log(error))
     }
+
+
 
     return (
         <div>
@@ -48,24 +88,16 @@ const MediaCard = ({ media }) => {
                 <div className='h-80'>
                     <img src={photoURL} alt="Shoes" className='fill mx-auto' />
                 </div>
-                <div className='flex items-center px-5 py-2 gap-10'>
-                    <button onClick={handelLike}>
+                <div className='flex items-center justify-evenly py-2 gap-5'>
+                    <button onClick={handelLike} className='flex items-center gap-2 btn-ghost rounded-xl py-1 px-2'>
                         <BiLike className='text-2xl'></BiLike>
                     </button>
-                    <button onClick={handelOpenComment} className='flex items-center gap-2 btn-ghost rounded-xl py-1 px-4'>
-                        <FaComment className='text-2xl'></FaComment>Comment
+                    <button onClick={handelOpenComment} className='flex items-center gap-2 btn-ghost rounded-xl py-1 px-2'>
+                        <FaComment className='text-2xl'></FaComment>{allComments.length} { allComments.length > 1 ? 'Comments' : 'Comment'}
                     </button>
+                    <button className='btn-ghost rounded-xl py-1 px-2'>Details</button>
                 </div>
-                <div>
-                    {
-                        isCommentOpen === true &&
-                        <>
-                            <div className="divider"></div>
-                            <p>hi</p>
-                        </>
-                    }
-                </div>
-                <div className='py-2'>
+                <div className='pt-2'>
                     {
                         isCommentOpen === true &&
                         <div className='flex justify-center gap-1 items-center '>
@@ -76,11 +108,28 @@ const MediaCard = ({ media }) => {
                             </div>
                             <form onSubmit={handelSubmit} className="flex items-center justify-center gap-3">
                                 <input type="text" name='comment' placeholder="Write a comment" className="border-2 rounded-2xl px-1 py-1 w-52" />
-                                <input className='px-2 py-1 bg-violet-500 rounded-full text-white hover:bg-primary' type="submit" value="Submit" />
+                                <input className='px-2 pt-1 bg-violet-500 rounded-full text-white hover:bg-primary' type="submit" value="Submit" />
                             </form>
                         </div>
                     }
                 </div>
+                <div>
+                    {
+                        isCommentOpen === true &&
+                        <>
+                            <div className="divider"></div>
+                            <div>
+                                {
+                                    allComments.map(com => <CommentCard
+                                        key={com._id}
+                                        com={com}
+                                    ></CommentCard>)
+                                }
+                            </div>
+                        </>
+                    }
+                </div>
+                
             </div>
         </div>
     );
