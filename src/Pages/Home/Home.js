@@ -44,7 +44,7 @@ const Home = () => {
 
                 }
                 if (imageData.success) {
-                    fetch(`https://we-share-server-liard.vercel.app/media`, {
+                    fetch(`http://localhost:5000/media`, {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
