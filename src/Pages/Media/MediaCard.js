@@ -6,6 +6,7 @@ import { AuthContext } from '../../Contexts/AuthContext/AuthProvider';
 import { toast } from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 import CommentCard from './CommentCard';
+import { Link } from 'react-router-dom';
 
 const MediaCard = ({ media }) => {
 
@@ -15,13 +16,23 @@ const MediaCard = ({ media }) => {
     const { _id, userName, userEmail, userPhoto, feeling, photoURL } = media
 
     const handelLike = () => {
-
+        
+        // fetch(`http://localhost:5000/isLike?_id=${_id}&email=${userEmail}`, {
+        //     method: 'PUT'
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         // if (data.deletedCount > 0) {
+        //         //     toast.success("Seller successfully deleted!")
+        //         //     refetch();
+        //         // }
+        //     })
     }
 
     const handelOpenComment = () => {
         setIsCommentOpen(!isCommentOpen);
 
-        console.log(_id);
     }
 
     const { data: allComments = [], refetch } = useQuery({
@@ -41,29 +52,29 @@ const MediaCard = ({ media }) => {
 
         const sendComment = {
             post_id: _id,
-            post_comment : comment,
+            post_comment: comment,
             post_userName: user.displayName,
-            post_userEmail : user.email,
-            post_userPhoto : user.photoURL 
+            post_userEmail: user.email,
+            post_userPhoto: user.photoURL
         }
         // console.log(sendComment)
         fetch('http://localhost:5000/comment', {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(sendComment)
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(sendComment)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.acknowledged) {
+                    toast.success("Your comment is successfully posted!")
+                    form.reset();
+                    refetch()
+                }
             })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data)
-                    if (data.acknowledged) {
-                        toast.success("Your comment is successfully posted!")
-                        form.reset();
-                        refetch()
-                    }
-                })
-                .catch(error => console.log(error))
+            .catch(error => console.log(error))
     }
 
 
@@ -93,9 +104,9 @@ const MediaCard = ({ media }) => {
                         <BiLike className='text-2xl'></BiLike>
                     </button>
                     <button onClick={handelOpenComment} className='flex items-center gap-2 btn-ghost rounded-xl py-1 px-2'>
-                        <FaComment className='text-2xl'></FaComment>{allComments.length} { allComments.length > 1 ? 'Comments' : 'Comment'}
+                        <FaComment className='text-2xl'></FaComment>{allComments.length} {allComments.length > 1 ? 'Comments' : 'Comment'}
                     </button>
-                    <button className='btn-ghost rounded-xl py-1 px-2'>Details</button>
+                    <Link to={`/media/${_id}`}><button className='btn-ghost rounded-xl py-1 px-2'>Details</button></Link>
                 </div>
                 <div className='pt-2'>
                     {
@@ -117,7 +128,8 @@ const MediaCard = ({ media }) => {
                     {
                         isCommentOpen === true &&
                         <>
-                            <div className="divider"></div>
+                                {allComments.length > 0 ? <div className="divider"></div> : 
+                                <div className='pb-4'></div>}
                             <div>
                                 {
                                     allComments.map(com => <CommentCard
@@ -129,7 +141,7 @@ const MediaCard = ({ media }) => {
                         </>
                     }
                 </div>
-                
+
             </div>
         </div>
     );

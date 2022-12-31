@@ -3,6 +3,7 @@ import Main from "../../Layout/Main/Main";
 import About from "../../Pages/About/About";
 import Home from "../../Pages/Home/Home";
 import Media from "../../Pages/Media/Media";
+import MediaDetails from "../../Pages/Media/MediaDetails";
 import Message from "../../Pages/Message/Message";
 import ErrorPage from "../../Pages/Shared/ErrorPage";
 import Login from "../../Pages/Shared/Login";
@@ -38,6 +39,11 @@ export const router = createBrowserRouter([
             {
                 path: '/about',
                 element: <PrivetRoute><About></About></PrivetRoute>
+            },
+            {
+                path: '/media/:_id',
+                loader: ({params}) => fetch(`http://localhost:5000/media/${params._id}`),
+                element: <MediaDetails></MediaDetails>
             }
         ]
     },
