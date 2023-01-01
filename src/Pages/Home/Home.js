@@ -20,6 +20,7 @@ const Home = () => {
 
         const form = event.target;
         const feeling = form.feeling.value;
+        const totalLike = 0
         const image = form.image.files[0];
         const imageHostKey = process.env.REACT_APP_imgbb_key
 
@@ -40,7 +41,8 @@ const Home = () => {
                     userEmail: user?.email,
                     userPhoto: user?.photoURL,
                     feeling,
-                    photoURL
+                    photoURL,
+                    totalLike
 
                 }
                 if (imageData.success) {

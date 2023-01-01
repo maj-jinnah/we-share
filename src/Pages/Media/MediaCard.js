@@ -13,22 +13,7 @@ const MediaCard = ({ media }) => {
     const { user } = useContext(AuthContext)
     const [isLike, setIsLike] = useState(false)
     const [isCommentOpen, setIsCommentOpen] = useState(false)
-    const { _id, userName, userEmail, userPhoto, feeling, photoURL } = media
-
-    const handelLike = () => {
-        
-        // fetch(`http://localhost:5000/isLike?_id=${_id}&email=${userEmail}`, {
-        //     method: 'PUT'
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         // if (data.deletedCount > 0) {
-        //         //     toast.success("Seller successfully deleted!")
-        //         //     refetch();
-        //         // }
-        //     })
-    }
+    const { _id, userName, userEmail, userPhoto, feeling, photoURL, totalLike } = media
 
     const handelOpenComment = () => {
         setIsCommentOpen(!isCommentOpen);
@@ -43,6 +28,20 @@ const MediaCard = ({ media }) => {
             return data;
         }
     })
+
+    const handelLike = () => {
+        
+        // fetch(`http://localhost:5000/isLike?_id=${_id}`, {
+        //     method: 'PUT'
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         if (data.acknowledged) {
+        //             refetch();
+        //         }
+        //     })
+    }
 
     const handelSubmit = event => {
         event.preventDefault();
@@ -101,10 +100,10 @@ const MediaCard = ({ media }) => {
                 </div>
                 <div className='flex items-center justify-evenly py-2 gap-5'>
                     <button onClick={handelLike} className='flex items-center gap-2 btn-ghost rounded-xl py-1 px-2'>
-                        <BiLike className='text-2xl'></BiLike>
+                        <BiLike className='text-2xl'></BiLike>{totalLike?.length} {totalLike?.length > 1 ? 'Likes' : 'Like'}
                     </button>
                     <button onClick={handelOpenComment} className='flex items-center gap-2 btn-ghost rounded-xl py-1 px-2'>
-                        <FaComment className='text-2xl'></FaComment>{allComments.length} {allComments.length > 1 ? 'Comments' : 'Comment'}
+                        <FaComment className='text-2xl'></FaComment>{allComments?.length} {allComments?.length > 1 ? 'Comments' : 'Comment'}
                     </button>
                     <Link to={`/media/${_id}`}><button className='btn-ghost rounded-xl py-1 px-2'>Details</button></Link>
                 </div>
@@ -119,7 +118,7 @@ const MediaCard = ({ media }) => {
                             </div>
                             <form onSubmit={handelSubmit} className="flex items-center justify-center gap-3">
                                 <input type="text" name='comment' placeholder="Write a comment" className="border-2 rounded-2xl px-1 py-1 w-52" />
-                                <input className='px-2 pt-1 bg-violet-500 rounded-full text-white hover:bg-primary' type="submit" value="Submit" />
+                                <input className='px-2 py-1 bg-violet-500 rounded-full text-white hover:bg-primary' type="submit" value="Submit" />
                             </form>
                         </div>
                     }
