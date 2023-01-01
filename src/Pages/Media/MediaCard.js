@@ -23,15 +23,15 @@ const MediaCard = ({ media }) => {
     const { data: allComments = [], refetch } = useQuery({
         queryKey: ['allComments', _id],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/allComments?_id=${_id}`)
+            const res = await fetch(`https://we-share-server-liard.vercel.app/allComments?_id=${_id}`)
             const data = await res.json()
             return data;
         }
     })
 
     const handelLike = () => {
-        
-        // fetch(`http://localhost:5000/isLike?_id=${_id}`, {
+
+        // fetch(`https://we-share-server-liard.vercel.app/isLike?_id=${_id}`, {
         //     method: 'PUT'
         // })
         //     .then(res => res.json())
@@ -57,7 +57,7 @@ const MediaCard = ({ media }) => {
             post_userPhoto: user.photoURL
         }
         // console.log(sendComment)
-        fetch('http://localhost:5000/comment', {
+        fetch('https://we-share-server-liard.vercel.app/comment', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -66,7 +66,7 @@ const MediaCard = ({ media }) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                // console.log(data)
                 if (data.acknowledged) {
                     toast.success("Your comment is successfully posted!")
                     form.reset();
@@ -127,7 +127,7 @@ const MediaCard = ({ media }) => {
                     {
                         isCommentOpen === true &&
                         <>
-                                {allComments.length > 0 ? <div className="divider"></div> : 
+                            {allComments.length > 0 ? <div className="divider"></div> :
                                 <div className='pb-4'></div>}
                             <div>
                                 {

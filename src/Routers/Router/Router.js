@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/media',
-                loader: () => fetch(`http://localhost:5000/medias`),
+                loader: () => fetch(`https://we-share-server-liard.vercel.app/medias`),
                 element: <PrivetRoute><Media></Media></PrivetRoute>
             },
             {
@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/media/:_id',
-                loader: ({params}) => fetch(`http://localhost:5000/media/${params._id}`),
+                loader: ({ params }) => fetch(`https://we-share-server-liard.vercel.app/media/${params._id}`),
                 element: <MediaDetails></MediaDetails>
             }
         ]

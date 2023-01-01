@@ -13,7 +13,7 @@ const MediaDetails = () => {
     const { data: allComments = [] } = useQuery({
         queryKey: ['allComments', _id],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/allComments?_id=${_id}`)
+            const res = await fetch(`https://we-share-server-liard.vercel.app/allComments?_id=${_id}`)
             const data = await res.json()
             return data;
         }
@@ -48,7 +48,7 @@ const MediaDetails = () => {
                         <FaComment className='text-2xl'></FaComment>{allComments.length} {allComments.length > 1 ? 'Comments' : 'Comment'}
                     </button>
                 </div>
-                
+
                 <div className='pb-2'>
                     {allComments.length > 0 ? <div className="divider"></div> :
                         <div className='pb-4'></div>}
